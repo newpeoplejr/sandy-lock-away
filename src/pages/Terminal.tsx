@@ -1,10 +1,9 @@
-
 import { useState, useEffect } from 'react';
 import { QrCode, ScanQrCode } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from "@/hooks/use-toast";
 import { Booking } from '@/types';
-import { bookings } from '@/data/bookings';
+import { mockBookings as bookings } from '@/data/bookings';
 
 const Terminal = () => {
   const [isScanning, setIsScanning] = useState(false);

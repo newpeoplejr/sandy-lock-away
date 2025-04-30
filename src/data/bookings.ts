@@ -68,3 +68,5 @@ export const mockBookings: Booking[] = [
     status: "active"
   }
 ];
+
+export { mockBookings as bookings };

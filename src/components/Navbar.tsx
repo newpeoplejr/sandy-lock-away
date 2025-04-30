@@ -1,7 +1,6 @@
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { User, MapPin, Settings, Info, Help, MessageSquare, QrCode, Menu } from 'lucide-react';
+import { User, MapPin, Settings, Info, HelpCircle, MessageSquare, QrCode, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import AuthModal from './AuthModal';
 import { 
@@ -63,7 +62,7 @@ const Navbar: React.FC = () => {
                         className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-beach-light/50 to-white p-3 no-underline outline-none focus:shadow-md"
                       >
                         <div className="mb-2 flex items-center gap-2">
-                          <Help size={16} className="text-beach-blue" />
+                          <HelpCircle size={16} className="text-beach-blue" />
                           <span className="text-sm font-medium">Помощь</span>
                         </div>
                         <p className="text-xs leading-tight text-beach-gray">

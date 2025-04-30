@@ -1,7 +1,6 @@
-
 import Navbar from '@/components/Navbar';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Help as HelpIcon } from 'lucide-react';
+import { HelpCircle } from 'lucide-react';
 
 const Help = () => {
   const faqs = [
@@ -54,7 +53,7 @@ const Help = () => {
       <div className="container mx-auto px-4 pt-24 pb-16">
         <div className="max-w-3xl mx-auto">
           <div className="flex items-center gap-2 mb-8">
-            <HelpIcon size={28} className="text-beach-blue" />
+            <HelpCircle size={28} className="text-beach-blue" />
             <h1 className="text-3xl font-bold text-beach-deep-blue">Помощь</h1>
           </div>
           
