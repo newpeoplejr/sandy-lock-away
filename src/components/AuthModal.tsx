@@ -11,7 +11,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mail, Lock, Apple } from 'lucide-react';
+import { Mail, Lock, Apple, AlertCircle } from 'lucide-react';
+import { useToast } from "@/components/ui/use-toast";
+import { mockUsers } from "@/data/users";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -19,15 +21,51 @@ interface AuthModalProps {
   onLogin: () => void;
 }
 
+const testAccounts = [
+  { email: "user@example.com", password: "user123", role: "пользователь" },
+  { email: "admin@example.com", password: "admin123", role: "администратор" }
+];
+
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
   const [activeTab, setActiveTab] = useState<string>("login");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [showTestAccounts, setShowTestAccounts] = useState<boolean>(false);
+  const { toast } = useToast();
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate login/signup
-    onLogin();
+    
+    // Проверка тестовых аккаунтов
+    const matchedUser = testAccounts.find(
+      account => account.email === email && account.password === password
+    );
+    
+    if (matchedUser) {
+      toast({
+        title: "Успешный вход",
+        description: `Вы вошли как ${matchedUser.role}`,
+      });
+      onLogin();
+    } else if (email && password) {
+      // Демонстрационный вход
+      toast({
+        title: "Успешный вход",
+        description: "Добро пожаловать в систему!",
+      });
+      onLogin();
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Ошибка входа",
+        description: "Пожалуйста, заполните все поля",
+      });
+    }
+  };
+  
+  const fillTestAccount = (account: { email: string; password: string }) => {
+    setEmail(account.email);
+    setPassword(account.password);
   };
   
   return (
@@ -35,29 +73,29 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-center text-beach-deep-blue">
-            Welcome to BeachLockers
+            Добро пожаловать в ПляжныеШкафчики
           </DialogTitle>
           <DialogDescription className="text-center text-beach-gray">
-            Secure your belongings while enjoying the beach
+            Защитите свои вещи во время отдыха на пляже
           </DialogDescription>
         </DialogHeader>
         
         <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-2 mb-4">
-            <TabsTrigger value="login">Login</TabsTrigger>
-            <TabsTrigger value="signup">Sign Up</TabsTrigger>
+            <TabsTrigger value="login">Вход</TabsTrigger>
+            <TabsTrigger value="signup">Регистрация</TabsTrigger>
           </TabsList>
           
           <TabsContent value="login">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Электронная почта</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-3 h-4 w-4 text-beach-gray" />
                   <Input 
                     id="email"
                     type="email"
-                    placeholder="youremail@example.com"
+                    placeholder="вашапочта@пример.рф"
                     className="pl-10"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -67,7 +105,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Пароль</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-3 h-4 w-4 text-beach-gray" />
                   <Input 
@@ -82,14 +120,53 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
                 </div>
               </div>
               
-              <Button type="submit" className="w-full">Login</Button>
+              <Button type="submit" className="w-full">Войти</Button>
+              
+              <div className="text-center">
+                <Button 
+                  variant="link" 
+                  type="button" 
+                  onClick={() => setShowTestAccounts(!showTestAccounts)}
+                  className="text-xs"
+                >
+                  {showTestAccounts ? "Скрыть тестовые аккаунты" : "Показать тестовые аккаунты"}
+                </Button>
+                
+                {showTestAccounts && (
+                  <div className="mt-2 p-3 bg-slate-50 rounded-md text-xs">
+                    <div className="flex items-center gap-1 mb-1 text-amber-600">
+                      <AlertCircle size={14} />
+                      <span className="font-medium">Тестовые аккаунты</span>
+                    </div>
+                    {testAccounts.map((account, idx) => (
+                      <div key={idx} className="mb-2 last:mb-0">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <div><strong>Почта:</strong> {account.email}</div>
+                            <div><strong>Пароль:</strong> {account.password}</div>
+                            <div><strong>Роль:</strong> {account.role}</div>
+                          </div>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            onClick={() => fillTestAccount(account)}
+                            className="h-7 text-xs"
+                          >
+                            Применить
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
               
               <div className="relative my-4">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+                  <span className="bg-background px-2 text-muted-foreground">Или войти через</span>
                 </div>
               </div>
               
@@ -126,13 +203,13 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
           <TabsContent value="signup">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="signup-email">Email</Label>
+                <Label htmlFor="signup-email">Электронная почта</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-3 h-4 w-4 text-beach-gray" />
                   <Input 
                     id="signup-email"
                     type="email"
-                    placeholder="youremail@example.com"
+                    placeholder="вашапочта@пример.рф"
                     className="pl-10"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -142,7 +219,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="signup-password">Password</Label>
+                <Label htmlFor="signup-password">Пароль</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-3 h-4 w-4 text-beach-gray" />
                   <Input 
@@ -157,14 +234,14 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin }) => {
                 </div>
               </div>
               
-              <Button type="submit" className="w-full">Sign Up</Button>
+              <Button type="submit" className="w-full">Зарегистрироваться</Button>
               
               <div className="relative my-4">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+                  <span className="bg-background px-2 text-muted-foreground">Или зарегистрироваться через</span>
                 </div>
               </div>
               

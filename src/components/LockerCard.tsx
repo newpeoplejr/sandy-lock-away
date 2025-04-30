@@ -1,56 +1,71 @@
 
+import React from 'react';
 import { LockerLocation } from '@/types';
-import { Link } from 'react-router-dom';
-import { Clock, MapPin, Star } from 'lucide-react';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { MapPin, Star, Clock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface LockerCardProps {
   locker: LockerLocation;
 }
 
 const LockerCard: React.FC<LockerCardProps> = ({ locker }) => {
+  const navigate = useNavigate();
+  
   return (
-    <Link 
-      to={`/lockers/${locker.id}`}
-      className="group flex flex-col bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
-    >
-      <div className="relative w-full h-48 overflow-hidden">
+    <Card className="overflow-hidden transition-shadow hover:shadow-md">
+      <div className="relative h-48 overflow-hidden">
         <img 
-          src={`${locker.image}?w=600&h=400&fit=crop`} 
+          src={locker.image} 
           alt={locker.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          className="w-full h-full object-cover"
         />
-        <div className="absolute top-3 right-3 bg-white px-2 py-1 rounded-md text-sm font-medium flex items-center gap-1">
-          <Star size={14} className="text-yellow-400 fill-yellow-400" />
-          {locker.rating}
+        <div className="absolute top-3 right-3 bg-white py-1 px-2 rounded text-sm font-medium text-beach-deep-blue">
+          {locker.pricePerHour}₽/час
         </div>
       </div>
-      
-      <div className="p-4 flex-1 flex flex-col">
-        <h3 className="font-semibold text-lg text-beach-deep-blue">{locker.name}</h3>
-        
-        <div className="flex items-center gap-1 text-beach-gray text-sm mt-1">
-          <MapPin size={14} />
-          <span className="truncate">{locker.address}</span>
+      <CardContent className="pt-4">
+        <div className="flex justify-between items-start">
+          <h3 className="font-semibold text-lg text-beach-deep-blue">{locker.name}</h3>
+          <div className="flex items-center gap-1">
+            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+            <span className="text-sm font-medium">{locker.rating}</span>
+          </div>
         </div>
         
-        <div className="flex items-center gap-1 text-beach-gray text-sm mt-1">
-          <Clock size={14} />
+        <div className="mt-2 text-sm text-beach-gray flex items-start gap-1">
+          <MapPin className="h-4 w-4 shrink-0 mt-0.5" />
+          <span>{locker.address}</span>
+        </div>
+        
+        <div className="mt-1 text-sm text-beach-gray flex items-center gap-1">
+          <Clock className="h-4 w-4" />
           <span>{locker.hours}</span>
         </div>
         
-        <div className="mt-3 pt-3 border-t flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-beach-gray">Available:</span>
-            <span className="font-medium text-sm">
-              {locker.availableLockers}/{locker.totalLockers}
-            </span>
+        <div className="mt-3 bg-beach-light rounded-md p-2">
+          <div className="flex justify-between items-center text-sm">
+            <span className="text-beach-gray">Доступно:</span>
+            <span className="font-medium">{locker.availableLockers} из {locker.totalLockers}</span>
           </div>
-          <div className="text-beach-deep-blue font-semibold">
-            ${locker.pricePerHour}/hour
+          <div className="mt-1 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-beach-blue rounded-full" 
+              style={{ width: `${(locker.availableLockers / locker.totalLockers) * 100}%` }}
+            ></div>
           </div>
         </div>
-      </div>
-    </Link>
+      </CardContent>
+      <CardFooter className="pt-0">
+        <Button 
+          className="w-full"
+          onClick={() => navigate(`/lockers/${locker.id}`)}
+        >
+          Забронировать
+        </Button>
+      </CardFooter>
+    </Card>
   );
 };
 

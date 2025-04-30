@@ -28,16 +28,16 @@ const Index = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-beach-blue to-beach-deep-blue opacity-80"></div>
           <div className="relative z-10 px-6 py-12 sm:px-12 sm:py-20 text-white">
             <h1 className="text-3xl sm:text-4xl font-bold mb-4">
-              Secure Beach Storage Made Simple
+              Удобное хранение вещей на пляже
             </h1>
             <p className="text-lg max-w-xl mb-8 opacity-90">
-              Find and book secure lockers near your favorite beaches. Enjoy your time worry-free!
+              Найдите и забронируйте безопасные шкафчики около ваших любимых пляжей. Наслаждайтесь отдыхом без забот!
             </p>
             <div className="relative max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
               <Input
                 type="text"
-                placeholder="Search locations..."
+                placeholder="Поиск по местоположению..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10 h-12 bg-white/90 border-none text-slate-800 placeholder:text-slate-400 rounded-lg w-full"
@@ -56,7 +56,9 @@ const Index = () => {
         {/* Controls */}
         <section className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
           <h2 className="text-2xl font-bold text-beach-deep-blue">
-            {filteredLocations.length} Locker{filteredLocations.length !== 1 ? "s" : ""} Available
+            {filteredLocations.length} {filteredLocations.length === 1 ? "локация доступна" : 
+             (filteredLocations.length >= 2 && filteredLocations.length <= 4) ? "локации доступны" : 
+             "локаций доступно"}
           </h2>
           
           <div className="flex items-center gap-2">
@@ -66,7 +68,7 @@ const Index = () => {
               className="gap-2"
             >
               <Filter size={16} />
-              Filter
+              Фильтр
             </Button>
             <Button 
               variant={showMap ? "default" : "outline"}
@@ -75,7 +77,7 @@ const Index = () => {
               onClick={() => setShowMap(true)}
             >
               <MapPin size={16} />
-              Map View
+              Карта
             </Button>
             <Button 
               variant={showMap ? "outline" : "default"}
@@ -91,7 +93,7 @@ const Index = () => {
                 <line x1="3" y1="12" x2="3.01" y2="12"></line>
                 <line x1="3" y1="18" x2="3.01" y2="18"></line>
               </svg>
-              List View
+              Список
             </Button>
           </div>
         </section>
@@ -111,9 +113,9 @@ const Index = () => {
           
           {filteredLocations.length === 0 && (
             <div className="col-span-full text-center py-12">
-              <h3 className="text-xl font-medium text-beach-deep-blue mb-2">No lockers found</h3>
-              <p className="text-beach-gray mb-4">Try adjusting your search criteria</p>
-              <Button onClick={() => setSearchTerm("")}>Clear Search</Button>
+              <h3 className="text-xl font-medium text-beach-deep-blue mb-2">Локации не найдены</h3>
+              <p className="text-beach-gray mb-4">Попробуйте изменить параметры поиска</p>
+              <Button onClick={() => setSearchTerm("")}>Очистить поиск</Button>
             </div>
           )}
         </section>
@@ -122,11 +124,11 @@ const Index = () => {
       {/* Footer */}
       <footer className="bg-white border-t border-slate-200 py-8">
         <div className="container text-center text-sm text-beach-gray">
-          <p className="mb-2">© 2025 BeachLockers. All rights reserved.</p>
+          <p className="mb-2">© 2025 ПляжныеШкафчики. Все права защищены.</p>
           <div className="flex justify-center gap-4">
-            <a href="#" className="hover:text-beach-deep-blue">Terms</a>
-            <a href="#" className="hover:text-beach-deep-blue">Privacy</a>
-            <a href="#" className="hover:text-beach-deep-blue">Contact</a>
+            <a href="#" className="hover:text-beach-deep-blue">Условия использования</a>
+            <a href="#" className="hover:text-beach-deep-blue">Конфиденциальность</a>
+            <a href="#" className="hover:text-beach-deep-blue">Контакты</a>
           </div>
         </div>
       </footer>

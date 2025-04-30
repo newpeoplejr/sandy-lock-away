@@ -16,7 +16,7 @@ const Navbar: React.FC = () => {
           <div className="bg-beach-blue text-white w-8 h-8 rounded-md flex items-center justify-center">
             <MapPin size={18} />
           </div>
-          <span className="font-bold text-lg text-beach-deep-blue">BeachLockers</span>
+          <span className="font-bold text-lg text-beach-deep-blue">ПляжныеШкафчики</span>
         </Link>
 
         <div className="flex items-center gap-4">
@@ -48,13 +48,21 @@ const Navbar: React.FC = () => {
                   <span className="hidden sm:inline">Админ-панель</span>
                 </Button>
               </Link>
+              <Link to="/profile">
+                <Button 
+                  variant="ghost"
+                  className="flex items-center gap-2"
+                >
+                  <User size={18} />
+                  <span className="hidden sm:inline">Мой аккаунт</span>
+                </Button>
+              </Link>
               <Button 
                 variant="ghost"
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 text-red-500 hover:text-red-600"
                 onClick={() => setIsLoggedIn(false)}
               >
-                <User size={18} />
-                <span className="hidden sm:inline">Мой аккаунт</span>
+                Выйти
               </Button>
             </div>
           )}
