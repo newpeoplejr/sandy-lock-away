@@ -9,6 +9,10 @@ import NotFound from "./pages/NotFound";
 import LockerDetails from "./pages/LockerDetails";
 import AdminDashboard from "./pages/Admin";
 import Profile from "./pages/Profile";
+import Terminal from "./pages/Terminal";
+import About from "./pages/About";
+import Help from "./pages/Help";
+import Contact from "./pages/Contact";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +27,10 @@ const App = () => (
           <Route path="/lockers/:id" element={<LockerDetails />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/terminal" element={<Terminal />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/help" element={<Help />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
