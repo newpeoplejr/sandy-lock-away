@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { User, MapPin } from 'lucide-react';
+import { User, MapPin, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import AuthModal from './AuthModal';
 
@@ -27,25 +27,36 @@ const Navbar: React.FC = () => {
                 onClick={() => setIsAuthModalOpen(true)}
                 className="hidden sm:flex"
               >
-                Sign In
+                Вход
               </Button>
               <Button 
                 onClick={() => setIsAuthModalOpen(true)}
                 className="flex gap-2 items-center"
               >
                 <User size={18} />
-                <span className="hidden sm:inline">Sign Up</span>
+                <span className="hidden sm:inline">Регистрация</span>
               </Button>
             </>
           ) : (
-            <Button 
-              variant="ghost"
-              className="flex items-center gap-2"
-              onClick={() => setIsLoggedIn(false)}
-            >
-              <User size={18} />
-              <span className="hidden sm:inline">My Account</span>
-            </Button>
+            <div className="flex items-center gap-2">
+              <Link to="/admin">
+                <Button 
+                  variant="outline"
+                  className="flex items-center gap-2"
+                >
+                  <Settings size={18} />
+                  <span className="hidden sm:inline">Админ-панель</span>
+                </Button>
+              </Link>
+              <Button 
+                variant="ghost"
+                className="flex items-center gap-2"
+                onClick={() => setIsLoggedIn(false)}
+              >
+                <User size={18} />
+                <span className="hidden sm:inline">Мой аккаунт</span>
+              </Button>
+            </div>
           )}
         </div>
       </div>
