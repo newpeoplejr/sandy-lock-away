@@ -110,7 +110,7 @@ const Map = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         @keyframes wave {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
