@@ -1,22 +1,36 @@
+
 import { useState, useEffect } from 'react';
 import { QrCode, ScanQrCode } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from "@/hooks/use-toast";
 import { Booking } from '@/types';
-import { mockBookings as bookings } from '@/data/bookings';
+import { bookings } from '@/data/bookings';
 
 const Terminal = () => {
   const [isScanning, setIsScanning] = useState(false);
   const [scannedBooking, setScannedBooking] = useState<Booking | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [qrCodeInput, setQrCodeInput] = useState<string>("");
   
+  // Имитирует сканирование QR-кода из формы (для демо)
   const startScanning = () => {
     setIsScanning(true);
     
     // Имитация сканирования QR-кода
     setTimeout(() => {
-      const randomBooking = bookings[Math.floor(Math.random() * bookings.length)];
-      setScannedBooking(randomBooking);
+      // Находим бронирование по QR-коду или берём случайное для демо
+      let foundBooking = null;
+      
+      if (qrCodeInput) {
+        foundBooking = bookings.find(booking => booking.id === qrCodeInput);
+      }
+      
+      if (!foundBooking) {
+        // Для демо, если код не найден, берём активное бронирование
+        foundBooking = bookings.find(booking => booking.status === 'active') || bookings[0];
+      }
+      
+      setScannedBooking(foundBooking);
       setIsScanning(false);
       setShowSuccess(true);
       
@@ -24,12 +38,13 @@ const Terminal = () => {
         title: "QR-код успешно отсканирован",
         description: "Шкафчик открыт. Приятного отдыха!",
       });
-    }, 3000);
+    }, 2000);
   };
   
   const resetTerminal = () => {
     setScannedBooking(null);
     setShowSuccess(false);
+    setQrCodeInput("");
   };
   
   // Автоматический сброс через 30 секунд после успеха
@@ -57,6 +72,19 @@ const Terminal = () => {
               </div>
               
               <QrCode size={120} className="text-beach-blue mb-6" />
+              
+              <div className="w-full max-w-xs mb-4">
+                <input
+                  type="text"
+                  value={qrCodeInput}
+                  onChange={(e) => setQrCodeInput(e.target.value)}
+                  placeholder="Введите ID бронирования"
+                  className="px-4 py-3 rounded-md w-full bg-slate-700 border border-slate-600 text-white placeholder-slate-400"
+                />
+                <p className="text-xs text-slate-400 mt-2">
+                  * В реальности код считывается сканером
+                </p>
+              </div>
               
               <Button 
                 onClick={startScanning} 

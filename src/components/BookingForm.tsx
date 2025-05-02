@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { LockerLocation } from "@/types";
 import { lockerSizes } from "@/data/lockers";
+import { generateQRCode } from "@/data/bookings";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon, QrCode } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -34,16 +35,21 @@ const BookingForm: React.FC<BookingFormProps> = ({ locker, onSuccess }) => {
   const [selectedSize, setSelectedSize] = useState(lockerSizes[0].id);
   const [hours, setHours] = useState("2");
   const [showQRCode, setShowQRCode] = useState(false);
-
+  const [bookingId, setBookingId] = useState("");
+  
   const selectedSizeDetails = lockerSizes.find(size => size.id === selectedSize);
   const pricePerHour = locker.pricePerHour * (selectedSizeDetails?.priceMultiplier || 1);
   const totalPrice = pricePerHour * parseInt(hours);
 
   const handleBooking = () => {
-    // In a real app, we would call an API to create a booking
+    // Генерируем уникальный ID бронирования
+    const newBookingId = `book_${Math.floor(Math.random() * 1000000000)}`;
+    setBookingId(newBookingId);
+    
+    // В реальном приложении здесь был бы API-запрос для создания бронирования
     toast({
-      title: "Booking Successful!",
-      description: "Your locker has been reserved.",
+      title: "Бронирование успешно!",
+      description: "Ваш шкафчик зарезервирован.",
     });
     setShowQRCode(true);
   };
@@ -53,46 +59,58 @@ const BookingForm: React.FC<BookingFormProps> = ({ locker, onSuccess }) => {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-center text-beach-deep-blue">
-            Your Booking is Confirmed!
+            Ваше бронирование подтверждено!
           </DialogTitle>
           <DialogDescription className="text-center">
-            Show this QR code at the location to unlock your locker
+            Покажите этот QR-код в терминале, чтобы открыть шкафчик
           </DialogDescription>
         </DialogHeader>
         
         <div className="flex flex-col items-center justify-center p-6">
           <div className="bg-white p-4 rounded-lg shadow-md">
-            <QrCode size={200} className="text-beach-deep-blue" />
+            {bookingId && (
+              <img 
+                src={generateQRCode(bookingId)} 
+                alt="QR код бронирования"
+                width={200}
+                height={200}
+                className="block"
+              />
+            )}
           </div>
           
           <div className="mt-6 w-full">
-            <h3 className="font-semibold text-lg">Booking Details</h3>
+            <h3 className="font-semibold text-lg">Детали бронирования</h3>
             <div className="mt-2 space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-beach-gray">Location:</span>
+                <span className="text-beach-gray">ID бронирования:</span>
+                <span className="font-medium">{bookingId.slice(-6)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-beach-gray">Локация:</span>
                 <span className="font-medium">{locker.name}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-beach-gray">Date:</span>
-                <span className="font-medium">{date ? format(date, "PPP") : "Not selected"}</span>
+                <span className="text-beach-gray">Дата:</span>
+                <span className="font-medium">{date ? format(date, "PPP") : "Не выбрана"}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-beach-gray">Duration:</span>
-                <span className="font-medium">{hours} hours</span>
+                <span className="text-beach-gray">Длительность:</span>
+                <span className="font-medium">{hours} часов</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-beach-gray">Locker Size:</span>
+                <span className="text-beach-gray">Размер шкафчика:</span>
                 <span className="font-medium">{selectedSizeDetails?.name}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-beach-gray">Total Price:</span>
-                <span className="font-semibold text-beach-deep-blue">${totalPrice.toFixed(2)}</span>
+                <span className="text-beach-gray">Общая сумма:</span>
+                <span className="font-semibold text-beach-deep-blue">{totalPrice.toFixed(2)}₽</span>
               </div>
             </div>
           </div>
           
           <Button className="mt-6 w-full" onClick={onSuccess}>
-            Done
+            Готово
           </Button>
         </div>
       </DialogContent>
@@ -102,7 +120,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ locker, onSuccess }) => {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="date">Date</Label>
+        <Label htmlFor="date">Дата</Label>
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -114,7 +132,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ locker, onSuccess }) => {
               )}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? format(date, "PPP") : <span>Pick a date</span>}
+              {date ? format(date, "PPP") : <span>Выберите дату</span>}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0 pointer-events-auto" align="start">
@@ -131,10 +149,10 @@ const BookingForm: React.FC<BookingFormProps> = ({ locker, onSuccess }) => {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="size">Locker Size</Label>
+        <Label htmlFor="size">Размер шкафчика</Label>
         <Select value={selectedSize} onValueChange={setSelectedSize}>
           <SelectTrigger id="size">
-            <SelectValue placeholder="Select size" />
+            <SelectValue placeholder="Выберите размер" />
           </SelectTrigger>
           <SelectContent>
             {lockerSizes.map((size) => (
@@ -150,7 +168,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ locker, onSuccess }) => {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="hours">Rental Hours</Label>
+        <Label htmlFor="hours">Часы аренды</Label>
         <Input
           id="hours"
           type="number"
@@ -164,12 +182,12 @@ const BookingForm: React.FC<BookingFormProps> = ({ locker, onSuccess }) => {
 
       <div className="pt-4 space-y-4">
         <div className="flex justify-between items-center">
-          <span className="text-beach-gray">Price per hour:</span>
-          <span>${pricePerHour.toFixed(2)}</span>
+          <span className="text-beach-gray">Цена за час:</span>
+          <span>{pricePerHour.toFixed(2)}₽</span>
         </div>
         <div className="flex justify-between items-center font-semibold">
-          <span>Total price:</span>
-          <span className="text-beach-deep-blue">${totalPrice.toFixed(2)}</span>
+          <span>Общая стоимость:</span>
+          <span className="text-beach-deep-blue">{totalPrice.toFixed(2)}₽</span>
         </div>
       </div>
 
@@ -177,7 +195,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ locker, onSuccess }) => {
         onClick={handleBooking}
         className="w-full bg-beach-blue hover:bg-beach-deep-blue"
       >
-        Book Now
+        Забронировать
       </Button>
     </div>
   );
