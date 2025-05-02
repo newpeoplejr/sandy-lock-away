@@ -1,17 +1,17 @@
 
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, useGLTF, Environment, ContactShadows, PerspectiveCamera } from '@react-three/drei';
-import { Suspense, useRef, useState, useEffect } from 'react';
+import { OrbitControls, Environment, ContactShadows, PerspectiveCamera } from '@react-three/drei';
+import { Suspense, useRef, useState } from 'react';
 import { Box, Boxes, TerminalSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-// Компонент простого шкафчика
+// Component for a simple locker
 function Locker({ position, color = "#4e7dbe", ...props }) {
   const boxRef = useRef();
   
   return (
     <group position={position} {...props}>
-      {/* Основа шкафчика */}
+      {/* Base of the locker */}
       <mesh 
         ref={boxRef} 
         castShadow
@@ -21,7 +21,7 @@ function Locker({ position, color = "#4e7dbe", ...props }) {
         <meshStandardMaterial color={color} />
       </mesh>
       
-      {/* Дверца */}
+      {/* Door */}
       <mesh 
         position={[0.5, 0, 0]} 
         castShadow
@@ -30,7 +30,7 @@ function Locker({ position, color = "#4e7dbe", ...props }) {
         <meshStandardMaterial color="#2c4c7c" />
       </mesh>
       
-      {/* Ручка */}
+      {/* Handle */}
       <mesh position={[0.55, 0, 0.3]} castShadow>
         <boxGeometry args={[0.1, 0.1, 0.1]} />
         <meshStandardMaterial color="gold" />
@@ -39,7 +39,7 @@ function Locker({ position, color = "#4e7dbe", ...props }) {
   );
 }
 
-// Компонент терминала
+// Terminal component
 function Terminal({ position }) {
   return (
     <group position={position}>
@@ -48,13 +48,13 @@ function Terminal({ position }) {
         <meshStandardMaterial color="#1e293b" />
       </mesh>
       
-      {/* Экран */}
+      {/* Screen */}
       <mesh position={[0, 0.7, 0.41]} castShadow>
         <boxGeometry args={[0.6, 0.8, 0.01]} />
         <meshStandardMaterial color="#0284c7" emissive="#0284c7" emissiveIntensity={0.2} />
       </mesh>
       
-      {/* Сканер */}
+      {/* Scanner */}
       <mesh position={[0, 0, 0.41]} castShadow>
         <boxGeometry args={[0.3, 0.3, 0.05]} />
         <meshStandardMaterial color="black" />
@@ -63,9 +63,9 @@ function Terminal({ position }) {
   );
 }
 
-// Группа шкафчиков
+// Locker group
 function LockerGroup() {
-  // Создаем несколько рядов шкафчиков
+  // Create several rows of lockers
   const lockerRows = [
     { x: -6, z: -4, count: 5, color: "#4e7dbe" },
     { x: -6, z: 4, count: 5, color: "#4e7dbe" },
@@ -75,13 +75,13 @@ function LockerGroup() {
 
   return (
     <>
-      {/* Пол */}
+      {/* Floor */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.01, 0]} receiveShadow>
         <planeGeometry args={[20, 20]} />
         <meshStandardMaterial color="#f0f9ff" />
       </mesh>
 
-      {/* Шкафчики */}
+      {/* Lockers */}
       {lockerRows.map((row, rowIndex) => (
         <group key={rowIndex}>
           {Array.from({ length: row.count }).map((_, i) => (
@@ -94,13 +94,13 @@ function LockerGroup() {
         </group>
       ))}
 
-      {/* Терминал в центре */}
+      {/* Terminal in the center */}
       <Terminal position={[0, 0, 0]} />
       
-      {/* Освещение сцены */}
+      {/* Scene lighting */}
       <ambientLight intensity={0.5} />
-      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} castShadow />
-      <spotLight position={[-10, 10, -10]} angle={0.15} penumbra={1} castShadow />
+      <directionalLight position={[10, 10, 10]} angle={0.15} penumbra={1} castShadow />
+      <directionalLight position={[-10, 10, -10]} angle={0.15} penumbra={1} castShadow />
     </>
   );
 }
@@ -108,7 +108,7 @@ function LockerGroup() {
 export default function LockerModel() {
   const [cameraPosition, setCameraPosition] = useState<[number, number, number]>([0, 5, 10]);
   
-  // Функция для изменения ракурса камеры
+  // Function to change camera view
   const changeCameraView = (view: 'front' | 'top' | 'side') => {
     switch (view) {
       case 'front':
@@ -126,7 +126,7 @@ export default function LockerModel() {
   return (
     <div className="min-h-screen bg-beach-deep-blue text-white flex flex-col">
       <div className="container mx-auto px-4 py-8 flex-1 flex flex-col">
-        <h1 className="text-4xl md:text-6xl font-bold mb-8 text-center">3D Визуализация шкафчиков</h1>
+        <h1 className="text-4xl md:text-6xl font-bold mb-8 text-center">3D Visualization of Lockers</h1>
         
         <div className="flex flex-row gap-4 mb-4">
           <Button 
@@ -135,7 +135,7 @@ export default function LockerModel() {
             className="flex items-center gap-2"
           >
             <Box size={20} />
-            Вид спереди
+            Front View
           </Button>
           <Button 
             onClick={() => changeCameraView('top')}
@@ -143,7 +143,7 @@ export default function LockerModel() {
             className="flex items-center gap-2"
           >
             <Boxes size={20} />
-            Вид сверху
+            Top View
           </Button>
           <Button 
             onClick={() => changeCameraView('side')}
@@ -151,37 +151,35 @@ export default function LockerModel() {
             className="flex items-center gap-2"
           >
             <TerminalSquare size={20} />
-            Вид сбоку
+            Side View
           </Button>
         </div>
         
         <div className="relative flex-grow bg-slate-800/50 rounded-xl overflow-hidden backdrop-blur-sm shadow-xl">
-          <div className="absolute inset-0">
-            <Canvas shadows>
-              <Suspense fallback={null}>
-                <PerspectiveCamera makeDefault position={cameraPosition} />
-                <LockerGroup />
-                <Environment preset="city" />
-                <ContactShadows opacity={0.4} scale={10} blur={1} far={10} resolution={256} color="#000000" />
-                <OrbitControls 
-                  enablePan={true}
-                  enableZoom={true}
-                  enableRotate={true}
-                  minPolarAngle={0}
-                  maxPolarAngle={Math.PI / 2}
-                />
-              </Suspense>
-            </Canvas>
-          </div>
+          <Canvas shadows>
+            <Suspense fallback={null}>
+              <PerspectiveCamera makeDefault position={cameraPosition} />
+              <LockerGroup />
+              <Environment preset="city" />
+              <ContactShadows opacity={0.4} scale={10} blur={1} far={10} resolution={256} color="#000000" />
+              <OrbitControls 
+                enablePan={true}
+                enableZoom={true}
+                enableRotate={true}
+                minPolarAngle={0}
+                maxPolarAngle={Math.PI / 2}
+              />
+            </Suspense>
+          </Canvas>
           
           <div className="absolute bottom-4 left-4 bg-black/50 p-3 rounded-lg backdrop-blur-sm">
-            <p className="text-sm text-white">👆 Используйте мышь для вращения • 🖐️ Прокрутка для масштабирования</p>
+            <p className="text-sm text-white">👆 Use mouse to rotate • 🖐️ Scroll to zoom</p>
           </div>
         </div>
       </div>
       
       <footer className="text-center p-4 text-slate-400 bg-slate-900/60">
-        <p>Система управления пляжными шкафчиками &copy; 2023-2025</p>
+        <p>Beach Locker Management System &copy; 2023-2025</p>
       </footer>
     </div>
   );
