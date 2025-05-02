@@ -13,6 +13,7 @@ import Terminal from "./pages/Terminal";
 import About from "./pages/About";
 import Help from "./pages/Help";
 import Contact from "./pages/Contact";
+import LockerModel from "./pages/LockerModel";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/help" element={<Help />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/3d-model" element={<LockerModel />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
