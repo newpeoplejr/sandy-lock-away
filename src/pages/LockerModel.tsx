@@ -99,8 +99,8 @@ function LockerGroup() {
       
       {/* Scene lighting */}
       <ambientLight intensity={0.5} />
-      <directionalLight position={[10, 10, 10]} angle={0.15} penumbra={1} castShadow />
-      <directionalLight position={[-10, 10, -10]} angle={0.15} penumbra={1} castShadow />
+      <directionalLight position={[10, 10, 10]} castShadow />
+      <directionalLight position={[-10, 10, -10]} castShadow />
     </>
   );
 }
