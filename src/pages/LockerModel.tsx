@@ -1,31 +1,22 @@
 
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Environment, ContactShadows, PerspectiveCamera } from '@react-three/drei';
-import { Suspense, useRef, useState } from 'react';
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
+import { Suspense, useState } from 'react';
 import { Box, Boxes, TerminalSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 // Component for a simple locker
-function Locker({ position, color = "#4e7dbe", ...props }) {
-  const boxRef = useRef();
-  
+function Locker({ position, color = "#4e7dbe" }) {
   return (
-    <group position={position} {...props}>
+    <group position={position}>
       {/* Base of the locker */}
-      <mesh 
-        ref={boxRef} 
-        castShadow
-        receiveShadow
-      >
+      <mesh castShadow receiveShadow>
         <boxGeometry args={[1, 2, 1]} />
         <meshStandardMaterial color={color} />
       </mesh>
       
       {/* Door */}
-      <mesh 
-        position={[0.5, 0, 0]} 
-        castShadow
-      >
+      <mesh position={[0.5, 0, 0]} castShadow>
         <boxGeometry args={[0.05, 1.9, 0.9]} />
         <meshStandardMaterial color="#2c4c7c" />
       </mesh>
@@ -63,35 +54,54 @@ function Terminal({ position }) {
   );
 }
 
-// Locker group
-function LockerGroup() {
-  // Create several rows of lockers
-  const lockerRows = [
-    { x: -6, z: -4, count: 5, color: "#4e7dbe" },
-    { x: -6, z: 4, count: 5, color: "#4e7dbe" },
-    { x: 4, z: -4, count: 5, color: "#4e7dbe" },
-    { x: 4, z: 4, count: 5, color: "#4e7dbe" },
-  ];
-
+// Scene component
+function Scene({ cameraPosition }) {
   return (
     <>
       {/* Floor */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.01, 0]} receiveShadow>
+      <mesh 
+        rotation={[-Math.PI / 2, 0, 0]} 
+        position={[0, -1.01, 0]} 
+        receiveShadow
+      >
         <planeGeometry args={[20, 20]} />
         <meshStandardMaterial color="#f0f9ff" />
       </mesh>
 
-      {/* Lockers */}
-      {lockerRows.map((row, rowIndex) => (
-        <group key={rowIndex}>
-          {Array.from({ length: row.count }).map((_, i) => (
-            <Locker 
-              key={`${rowIndex}-${i}`} 
-              position={[row.x, 0, row.z + i * 1.2 - row.count * 0.6]} 
-              color={row.color}
-            />
-          ))}
-        </group>
+      {/* Lockers - Left Front Row */}
+      {Array.from({ length: 5 }).map((_, i) => (
+        <Locker 
+          key={`left-front-${i}`} 
+          position={[-6, 0, -4 + i * 1.2 - 2.4]} 
+          color="#4e7dbe"
+        />
+      ))}
+
+      {/* Lockers - Left Back Row */}
+      {Array.from({ length: 5 }).map((_, i) => (
+        <Locker 
+          key={`left-back-${i}`} 
+          position={[-6, 0, 4 + i * 1.2 - 2.4]} 
+          color="#4e7dbe"
+        />
+      ))}
+
+      {/* Lockers - Right Front Row */}
+      {Array.from({ length: 5 }).map((_, i) => (
+        <Locker 
+          key={`right-front-${i}`} 
+          position={[4, 0, -4 + i * 1.2 - 2.4]} 
+          color="#4e7dbe"
+        />
+      ))}
+
+      {/* Lockers - Right Back Row */}
+      {Array.from({ length: 5 }).map((_, i) => (
+        <Locker 
+          key={`right-back-${i}`} 
+          position={[4, 0, 4 + i * 1.2 - 2.4]} 
+          color="#4e7dbe"
+        />
       ))}
 
       {/* Terminal in the center */}
@@ -99,17 +109,29 @@ function LockerGroup() {
       
       {/* Scene lighting */}
       <ambientLight intensity={0.5} />
-      <directionalLight position={[10, 10, 10]} castShadow />
-      <directionalLight position={[-10, 10, -10]} castShadow />
+      <directionalLight position={[10, 10, 10]} intensity={0.8} castShadow />
+      <directionalLight position={[-10, 10, -10]} intensity={0.8} castShadow />
+
+      {/* Camera */}
+      <PerspectiveCamera makeDefault position={cameraPosition} />
+      
+      {/* Controls */}
+      <OrbitControls 
+        enablePan={true}
+        enableZoom={true}
+        enableRotate={true}
+        minPolarAngle={0}
+        maxPolarAngle={Math.PI / 2}
+      />
     </>
   );
 }
 
 export default function LockerModel() {
-  const [cameraPosition, setCameraPosition] = useState<[number, number, number]>([0, 5, 10]);
+  const [cameraPosition, setCameraPosition] = useState([0, 5, 10]);
   
   // Function to change camera view
-  const changeCameraView = (view: 'front' | 'top' | 'side') => {
+  const changeCameraView = (view) => {
     switch (view) {
       case 'front':
         setCameraPosition([0, 3, 12]);
@@ -120,15 +142,17 @@ export default function LockerModel() {
       case 'side':
         setCameraPosition([12, 3, 0]);
         break;
+      default:
+        setCameraPosition([0, 5, 10]);
     }
   };
   
   return (
-    <div className="min-h-screen bg-beach-deep-blue text-white flex flex-col">
+    <div className="min-h-screen bg-slate-900 text-white flex flex-col">
       <div className="container mx-auto px-4 py-8 flex-1 flex flex-col">
         <h1 className="text-4xl md:text-6xl font-bold mb-8 text-center">3D Visualization of Lockers</h1>
         
-        <div className="flex flex-row gap-4 mb-4">
+        <div className="flex flex-wrap gap-4 mb-4 justify-center">
           <Button 
             onClick={() => changeCameraView('front')}
             variant="outline" 
@@ -158,17 +182,7 @@ export default function LockerModel() {
         <div className="relative flex-grow bg-slate-800/50 rounded-xl overflow-hidden backdrop-blur-sm shadow-xl">
           <Canvas shadows>
             <Suspense fallback={null}>
-              <PerspectiveCamera makeDefault position={cameraPosition} />
-              <LockerGroup />
-              <Environment preset="city" />
-              <ContactShadows opacity={0.4} scale={10} blur={1} far={10} resolution={256} color="#000000" />
-              <OrbitControls 
-                enablePan={true}
-                enableZoom={true}
-                enableRotate={true}
-                minPolarAngle={0}
-                maxPolarAngle={Math.PI / 2}
-              />
+              <Scene cameraPosition={cameraPosition} />
             </Suspense>
           </Canvas>
           
