@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { 
   Table, 
@@ -26,9 +26,10 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Database, ChartBar, Settings, FileText } from "lucide-react";
+import { Users, Database, ChartBar, Settings, FileText, MapPin } from "lucide-react";
 import { mockBookings } from "@/data/bookings";
 import { mockUsers } from "@/data/users";
+import LocationsManager from "@/components/admin/LocationsManager";
 
 // Имитация авторизации для админ-панели
 const isAdmin = true; // В реальном приложении это должно быть основано на проверке ролей пользователя
@@ -39,72 +40,16 @@ const AdminDashboard: React.FC = () => {
     return <Navigate to="/" replace />;
   }
 
-  return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-slate-50">
-        <Sidebar>
-          <SidebarHeader>
-            <div className="flex items-center px-2">
-              <div className="bg-beach-blue text-white w-8 h-8 rounded-md flex items-center justify-center mr-2">
-                <Settings size={18} />
-              </div>
-              <span className="font-bold text-lg">Админ-панель</span>
-            </div>
-          </SidebarHeader>
-          <SidebarContent>
-            <SidebarGroup>
-              <SidebarGroupLabel>Управление</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="Панель управления">
-                      <ChartBar />
-                      <span>Статистика</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="Пользователи">
-                      <Users />
-                      <span>Пользователи</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="Бронирования">
-                      <FileText />
-                      <span>Бронирования</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="Точки локеров">
-                      <Database />
-                      <span>Точки локеров</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </SidebarContent>
-          <SidebarFooter>
-            <Button variant="outline" className="w-full" asChild>
-              <a href="/">Вернуться на сайт</a>
-            </Button>
-          </SidebarFooter>
-        </Sidebar>
+  const [activeSection, setActiveSection] = useState<string>("dashboard");
 
-        <SidebarInset>
-          <header className="bg-white border-b p-4">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center">
-                <SidebarTrigger className="mr-2" />
-                <h1 className="text-xl font-bold">Панель управления</h1>
-              </div>
-              <div>
-                <span className="text-sm text-muted-foreground">Администратор</span>
-              </div>
-            </div>
-          </header>
-
-          <div className="p-6">
+  const renderContent = () => {
+    switch(activeSection) {
+      case "locations":
+        return <LocationsManager />;
+      case "dashboard":
+      default:
+        return (
+          <>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
               <Card>
                 <CardHeader className="pb-2">
@@ -216,6 +161,99 @@ const AdminDashboard: React.FC = () => {
                 </CardContent>
               </Card>
             </div>
+          </>
+        );
+    }
+  };
+
+  return (
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full bg-slate-50">
+        <Sidebar>
+          <SidebarHeader>
+            <div className="flex items-center px-2">
+              <div className="bg-beach-blue text-white w-8 h-8 rounded-md flex items-center justify-center mr-2">
+                <Settings size={18} />
+              </div>
+              <span className="font-bold text-lg">Админ-панель</span>
+            </div>
+          </SidebarHeader>
+          <SidebarContent>
+            <SidebarGroup>
+              <SidebarGroupLabel>Управление</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton 
+                      tooltip="Панель управления"
+                      onClick={() => setActiveSection("dashboard")}
+                      className={activeSection === "dashboard" ? "bg-accent text-accent-foreground" : ""}
+                    >
+                      <ChartBar />
+                      <span>Статистика</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton 
+                      tooltip="Пользователи"
+                      onClick={() => setActiveSection("users")}
+                      className={activeSection === "users" ? "bg-accent text-accent-foreground" : ""}
+                    >
+                      <Users />
+                      <span>Пользователи</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton 
+                      tooltip="Бронирования"
+                      onClick={() => setActiveSection("bookings")}
+                      className={activeSection === "bookings" ? "bg-accent text-accent-foreground" : ""}
+                    >
+                      <FileText />
+                      <span>Бронирования</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton 
+                      tooltip="Точки локеров"
+                      onClick={() => setActiveSection("locations")}
+                      className={activeSection === "locations" ? "bg-accent text-accent-foreground" : ""}
+                    >
+                      <MapPin />
+                      <span>Точки локеров</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </SidebarContent>
+          <SidebarFooter>
+            <Button variant="outline" className="w-full" asChild>
+              <a href="/">Вернуться на сайт</a>
+            </Button>
+          </SidebarFooter>
+        </Sidebar>
+
+        <SidebarInset>
+          <header className="bg-white border-b p-4">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center">
+                <SidebarTrigger className="mr-2" />
+                <h1 className="text-xl font-bold">
+                  {activeSection === "dashboard" && "Панель управления"}
+                  {activeSection === "users" && "Управление пользователями"}
+                  {activeSection === "bookings" && "Управление бронированиями"}
+                  {activeSection === "locations" && "Управление локациями"}
+                </h1>
+              </div>
+              <div>
+                <span className="text-sm text-muted-foreground">Администратор</span>
+              </div>
+            </div>
+          </header>
+
+          <div className="p-6">
+            {renderContent()}
           </div>
         </SidebarInset>
       </div>
