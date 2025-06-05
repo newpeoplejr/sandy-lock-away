@@ -57,7 +57,7 @@ export function LockerDoor({ position, size, color = "#DC2626", number }: Locker
         <meshStandardMaterial 
           color="#FFFFFF" 
           metalness={0.1} 
-          roughness={0.9
+          roughness={0.9}
         />
       </mesh>
       

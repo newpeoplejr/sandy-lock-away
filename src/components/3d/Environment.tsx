@@ -155,7 +155,7 @@ export function Environment() {
           <meshStandardMaterial 
             color="#8B4513" 
             metalness={0.3} 
-            roughness={0.7
+            roughness={0.7}
           />
         </mesh>
         
