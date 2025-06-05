@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { User, MapPin, Settings, Info, HelpCircle, MessageSquare, QrCode, Menu } from 'lucide-react';
+import { User, MapPin, Settings, Info, HelpCircle, MessageSquare, QrCode, Menu, Box } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import AuthModal from './AuthModal';
 import { 
@@ -35,6 +35,12 @@ const Navbar: React.FC = () => {
               <NavigationMenuItem>
                 <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
                   <Link to="/">Главная</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              
+              <NavigationMenuItem>
+                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                  <Link to="/3d-model">3D Модель</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
               
@@ -116,6 +122,9 @@ const Navbar: React.FC = () => {
             <div className="absolute top-16 left-0 w-full bg-white shadow-lg border-t border-slate-200 py-2">
               <Link to="/" className="block px-4 py-2 text-beach-deep-blue hover:bg-beach-light">
                 Главная
+              </Link>
+              <Link to="/3d-model" className="block px-4 py-2 text-beach-deep-blue hover:bg-beach-light">
+                3D Модель
               </Link>
               <Link to="/about" className="block px-4 py-2 text-beach-deep-blue hover:bg-beach-light">
                 О нас
