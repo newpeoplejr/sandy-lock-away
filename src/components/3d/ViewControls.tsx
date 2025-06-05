@@ -1,5 +1,5 @@
 
-import { Perspective, Square, Eye, Layers } from "lucide-react";
+import { Box, Square, Eye, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface ViewControlsProps {
@@ -38,7 +38,7 @@ export function ViewControls({ onChangeView }: ViewControlsProps) {
         variant="default"
         className="flex items-center gap-2 bg-white/20 border-white/30 text-white hover:bg-white/30 backdrop-blur-md"
       >
-        <Perspective size={18} />
+        <Box size={18} />
         Перспектива
       </Button>
     </div>
