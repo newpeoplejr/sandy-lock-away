@@ -38,7 +38,6 @@ export function LockerUnit({ position }: LockerUnitProps) {
           color="#6B7280" 
           metalness={0.8} 
           roughness={0.2}
-          envMapIntensity={1.5}
         />
       </mesh>
       
@@ -92,7 +91,6 @@ export function LockerUnit({ position }: LockerUnitProps) {
           color="#F8FAFC" 
           metalness={0.9} 
           roughness={0.1}
-          envMapIntensity={2}
         />
       </mesh>
       

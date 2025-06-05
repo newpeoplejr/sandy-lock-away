@@ -37,7 +37,6 @@ export function LockerDoor({ position, size, color = "#DC2626", number }: Locker
           color={hovered ? new THREE.Color(color).multiplyScalar(1.1) : color}
           metalness={0.2} 
           roughness={0.8}
-          envMapIntensity={0.5}
         />
       </mesh>
       
@@ -68,7 +67,6 @@ export function LockerDoor({ position, size, color = "#DC2626", number }: Locker
         color="#1F2937"
         anchorX="center"
         anchorY="middle"
-        font="/fonts/inter-bold.woff"
       >
         {number.toString()}
       </Text>
