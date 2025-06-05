@@ -64,8 +64,8 @@ export function LockerUnit({ position }: LockerUnitProps) {
       {Array.from({ length: rows }).map((_, row) => (
         Array.from({ length: cols }).map((_, col) => {
           const doorNumber = row * cols + col + 1;
-          // Alternate colors for visual variety
-          const colors = ['#DC2626', '#EA580C', '#D97706', '#CA8A04'];
+          // Purple and yellow colors for lockers
+          const colors = ['#8B5CF6', '#F59E0B', '#A855F7', '#EAB308'];
           const colorIndex = (row + col) % colors.length;
           
           return (
