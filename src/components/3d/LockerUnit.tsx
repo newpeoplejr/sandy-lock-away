@@ -18,19 +18,19 @@ export function LockerUnit({ position }: LockerUnitProps) {
     }
   });
   
-  // Define the grid size
+  // Define the grid size - увеличиваем размеры
   const rows = 5;
   const cols = 9;
-  const lockerWidth = 0.8;
-  const lockerHeight = 0.8;
-  const depth = 1.0;
+  const lockerWidth = 1.2; // увеличиваем с 0.8 до 1.2
+  const lockerHeight = 1.2; // увеличиваем с 0.8 до 1.2
+  const depth = 1.5; // увеличиваем с 1.0 до 1.5
   
   // Calculate total dimensions
   const totalWidth = cols * lockerWidth;
   const totalHeight = rows * lockerHeight;
   
   return (
-    <group ref={groupRef} position={position}>
+    <group ref={groupRef} position={position} scale={[1.5, 1.5, 1.5]}> {/* Добавляем общее масштабирование */}
       {/* Main cabinet structure with better materials */}
       <mesh castShadow receiveShadow position={[0, 0, -depth/2]}>
         <boxGeometry args={[totalWidth + 0.15, totalHeight + 0.15, depth]} />
