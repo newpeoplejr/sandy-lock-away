@@ -5,51 +5,71 @@ import { Scene } from '@/components/3d/Scene';
 import { ViewControls } from '@/components/3d/ViewControls';
 
 export default function LockerModel() {
-  const [cameraPosition, setCameraPosition] = useState<[number, number, number]>([0, 1, 12]);
+  const [cameraPosition, setCameraPosition] = useState<[number, number, number]>([8, 4, 10]);
   
   // Function to change camera view
   const changeCameraView = (view: 'front' | 'top' | 'side' | 'perspective') => {
     switch (view) {
       case 'front':
-        setCameraPosition([0, 0, 12]);
+        setCameraPosition([0, 2, 15]);
         break;
       case 'top':
-        setCameraPosition([0, 10, 5]);
+        setCameraPosition([0, 12, 8]);
         break;
       case 'side':
-        setCameraPosition([12, 0, 0]);
+        setCameraPosition([15, 2, 0]);
         break;
       case 'perspective':
-        setCameraPosition([8, 4, 10]);
+        setCameraPosition([10, 6, 12]);
         break;
       default:
-        setCameraPosition([0, 1, 12]);
+        setCameraPosition([8, 4, 10]);
     }
   };
   
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-900 flex flex-col">
-      <div className="container mx-auto px-4 py-8 flex-1 flex flex-col">
-        <h1 className="text-4xl md:text-6xl font-bold mb-8 text-center">3D Visualization of Beach Lockers</h1>
-        
+    <div className="h-screen w-screen bg-gradient-to-b from-sky-400 to-sky-200 overflow-hidden">
+      {/* Header overlay */}
+      <div className="absolute top-0 left-0 right-0 z-10 bg-gradient-to-b from-black/30 to-transparent p-6">
+        <h1 className="text-3xl md:text-5xl font-bold text-white text-center mb-4 drop-shadow-lg">
+          3D Beach Lockers Visualization
+        </h1>
         <ViewControls onChangeView={changeCameraView} />
-        
-        <div className="relative flex-grow bg-gray-100 rounded-xl overflow-hidden shadow-lg">
-          <Canvas shadows gl={{ antialias: true }}>
-            <Suspense fallback={null}>
-              <Scene cameraPosition={cameraPosition} />
-            </Suspense>
-          </Canvas>
-          
-          <div className="absolute bottom-4 left-4 bg-black/50 p-3 rounded-lg backdrop-blur-sm">
-            <p className="text-sm text-white">👆 Use mouse to rotate • 🖐️ Scroll to zoom</p>
-          </div>
-        </div>
       </div>
       
-      <footer className="text-center p-4 text-slate-600 bg-slate-200">
-        <p>Beach Locker Management System &copy; 2023-2025</p>
-      </footer>
+      {/* Full screen canvas */}
+      <div className="h-full w-full">
+        <Canvas 
+          shadows 
+          gl={{ 
+            antialias: true, 
+            alpha: true,
+            powerPreference: "high-performance"
+          }}
+          camera={{ fov: 45 }}
+        >
+          <Suspense fallback={null}>
+            <Scene cameraPosition={cameraPosition} />
+          </Suspense>
+        </Canvas>
+        
+        {/* Controls hint */}
+        <div className="absolute bottom-6 left-6 bg-black/60 p-4 rounded-xl backdrop-blur-md border border-white/20">
+          <p className="text-sm text-white flex items-center gap-2">
+            <span className="text-lg">🖱️</span> Вращение • 
+            <span className="text-lg">🔍</span> Масштаб • 
+            <span className="text-lg">✋</span> Перемещение
+          </p>
+        </div>
+        
+        {/* Info panel */}
+        <div className="absolute bottom-6 right-6 bg-black/60 p-4 rounded-xl backdrop-blur-md border border-white/20 max-w-xs">
+          <h3 className="text-white font-semibold mb-2">Beach Locker System</h3>
+          <p className="text-white/80 text-sm">
+            45 современных шкафчиков для хранения вещей на пляже с терминалом оплаты
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 
-import { Box, Boxes, TerminalSquare } from "lucide-react";
+import { Perspective, Square, Eye, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface ViewControlsProps {
@@ -8,43 +8,38 @@ interface ViewControlsProps {
 
 export function ViewControls({ onChangeView }: ViewControlsProps) {
   return (
-    <div className="flex flex-wrap gap-4 mb-6 justify-center">
+    <div className="flex flex-wrap gap-3 justify-center">
       <Button 
         onClick={() => onChangeView('front')}
         variant="outline" 
-        className="flex items-center gap-2"
+        className="flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-md"
       >
-        <Box size={20} />
-        Front View
+        <Square size={18} />
+        Фронт
       </Button>
       <Button 
         onClick={() => onChangeView('top')}
         variant="outline"
-        className="flex items-center gap-2"
+        className="flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-md"
       >
-        <Boxes size={20} />
-        Top View
+        <Layers size={18} />
+        Сверху
       </Button>
       <Button 
         onClick={() => onChangeView('side')}
         variant="outline"
-        className="flex items-center gap-2"
+        className="flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-md"
       >
-        <TerminalSquare size={20} />
-        Side View
+        <Eye size={18} />
+        Сбоку
       </Button>
       <Button 
         onClick={() => onChangeView('perspective')}
         variant="default"
-        className="flex items-center gap-2"
+        className="flex items-center gap-2 bg-white/20 border-white/30 text-white hover:bg-white/30 backdrop-blur-md"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M2 9.5V4a1 1 0 0 1 1-1h5.5" />
-          <path d="M2 14.5V20a1 1 0 0 0 1 1h5.5" />
-          <path d="M15.5 21H20a1 1 0 0 0 1-1v-5.5" />
-          <path d="M15.5 3H20a1 1 0 0 1 1 1v5.5" />
-        </svg>
-        Perspective
+        <Perspective size={18} />
+        Перспектива
       </Button>
     </div>
   );
